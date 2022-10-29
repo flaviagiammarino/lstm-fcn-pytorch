@@ -1,0 +1,5 @@
+numpy==1.23.1
+torch==1.10.2
+scikit-learn==1.1.2
+plotly==5.9.0
+kaleido==0.2.1
