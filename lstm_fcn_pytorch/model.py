@@ -5,36 +5,37 @@ from sklearn.utils import shuffle
 from lstm_fcn_pytorch.modules import LSTM_FCN
 
 class Model():
-    '''
-    Implementation of time series classification model introduced in Karim, F., Majumdar, S., Darabi, H.
-    and Chen, S., 2017. LSTM fully convolutional networks for time series classification. IEEE access,
-    6, pp.1662-1669. https://arxiv.org/abs/1709.05206.
-    
-    Parameters:
-    __________________________________
-    x: np.array.
-        Time series, array with shape (samples, length) where samples is the number of time series
-        and length is the length of the time series.
-
-    y: np.array.
-        Class labels, array with shape (samples,) where samples is the number of time series.
-
-    units: list of int.
-        The length of the list corresponds to the number of recurrent blocks, the items in the
-        list are the number of units of the LSTM layer in each block.
-
-    dropout: float.
-        Dropout rate to be applied after each recurrent block.
-
-    filters: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the number of filters (or channels) of the convolutional layer in each block.
-
-    kernel_sizes: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the kernel sizes of the convolutional layer in each block.
-    '''
     def __init__(self, x, y, units, dropout, filters, kernel_sizes):
+    
+        '''
+        Implementation of time series classification model introduced in Karim, F., Majumdar, S., Darabi, H.
+        and Chen, S., 2017. LSTM fully convolutional networks for time series classification. IEEE access,
+        6, pp.1662-1669. https://arxiv.org/abs/1709.05206.
+
+        Parameters:
+        __________________________________
+        x: np.array.
+            Time series, array with shape (samples, length) where samples is the number of time series
+            and length is the length of the time series.
+
+        y: np.array.
+            Class labels, array with shape (samples,) where samples is the number of time series.
+
+        units: list of int.
+            The length of the list corresponds to the number of recurrent blocks, the items in the
+            list are the number of units of the LSTM layer in each block.
+
+        dropout: float.
+            Dropout rate to be applied after each recurrent block.
+
+        filters: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the number of filters (or channels) of the convolutional layer in each block.
+
+        kernel_sizes: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the kernel sizes of the convolutional layer in each block.
+        '''
         
         # Check if GPU is available.
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -65,6 +66,7 @@ class Model():
         self.model = model.to(self.device)
     
     def fit(self, learning_rate, batch_size, epochs, verbose=True):
+        
         '''
         Train the model.
         
@@ -98,7 +100,6 @@ class Model():
         
         # Train the model.
         self.model.train(True)
-        
         print(f'Training on {self.device}.')
         for epoch in range(epochs):
             for features, targets in dataset:
@@ -110,10 +111,10 @@ class Model():
                 accuracy = (torch.argmax(outputs, dim=-1) == targets).float().sum() / targets.shape[0]
             if verbose:
                 print('epoch: {}, loss: {:,.6f}, accuracy: {:.6f}'.format(1 + epoch, loss, accuracy))
-
         self.model.train(False)
         
     def predict(self, x):
+        
         '''
         Predict the class labels.
 

@@ -4,21 +4,23 @@ from collections import OrderedDict
 warnings.filterwarnings('ignore', category=UserWarning, module='torch.nn')
 
 class LSTM(torch.nn.Module):
-    '''
-    Parameters:
-    __________________________________
-    input_length: int.
-        Length of the time series.
-
-    units: list of int.
-        The length of the list corresponds to the number of recurrent blocks, the items in the
-        list are the number of units of the LSTM layer in each block.
-
-    dropout: float.
-        Dropout rate to be applied after each recurrent block.
-    '''
     
     def __init__(self, input_length, units, dropout):
+    
+        '''
+        Parameters:
+        __________________________________
+        input_length: int.
+            Length of the time series.
+
+        units: list of int.
+            The length of the list corresponds to the number of recurrent blocks, the items in the
+            list are the number of units of the LSTM layer in each block.
+
+        dropout: float.
+            Dropout rate to be applied after each recurrent block.
+        '''
+        
         super(LSTM, self).__init__()
         
         # check the inputs
@@ -39,6 +41,7 @@ class LSTM(torch.nn.Module):
         self.model = torch.nn.Sequential(modules)
     
     def forward(self, x):
+        
         '''
         Parameters:
         __________________________________
@@ -46,22 +49,26 @@ class LSTM(torch.nn.Module):
             Time series, tensor with shape (samples, 1, length) where samples is the number of
             time series and length is the length of the time series.
         '''
+        
         return self.model(x)[:, -1, :]
 
 
 class FCN(torch.nn.Module):
-    '''
-    Parameters:
-    __________________________________
-    filters: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the number of filters (or channels) of the convolutional layer in each block.
-
-    kernel_sizes: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the kernel sizes of the convolutional layer in each block.
-    '''
+    
     def __init__(self, filters, kernel_sizes):
+    
+        '''
+        Parameters:
+        __________________________________
+        filters: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the number of filters (or channels) of the convolutional layer in each block.
+
+        kernel_sizes: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the kernel sizes of the convolutional layer in each block.
+        '''
+        
         super(FCN, self).__init__()
         
         # check the inputs
@@ -84,6 +91,7 @@ class FCN(torch.nn.Module):
         self.model = torch.nn.Sequential(modules)
         
     def forward(self, x):
+        
         '''
         Parameters:
         __________________________________
@@ -91,35 +99,39 @@ class FCN(torch.nn.Module):
             Time series, tensor with shape (samples, 1, length) where samples is the number of
             time series and length is the length of the time series.
         '''
+        
         return torch.mean(self.model(x), dim=-1)
 
 
 class LSTM_FCN(torch.nn.Module):
-    '''
-    Parameters:
-    __________________________________
-    input_length: int.
-        Length of the time series.
-
-    units: list of int.
-        The length of the list corresponds to the number of recurrent blocks, the items in the
-        list are the number of units of the LSTM layer in each block.
     
-    dropout: float.
-        Dropout rate to be applied after each recurrent block.
-
-    filters: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the number of filters (or channels) of the convolutional layer in each block.
-
-    kernel_sizes: list of int.
-        The length of the list corresponds to the number of convolutional blocks, the items in the
-        list are the kernel sizes of the convolutional layer in each block.
-    
-    num_classes: int.
-        Number of classes.
-    '''
     def __init__(self, input_length, units, dropout, filters, kernel_sizes, num_classes):
+        
+        '''
+        Parameters:
+        __________________________________
+        input_length: int.
+            Length of the time series.
+
+        units: list of int.
+            The length of the list corresponds to the number of recurrent blocks, the items in the
+            list are the number of units of the LSTM layer in each block.
+
+        dropout: float.
+            Dropout rate to be applied after each recurrent block.
+
+        filters: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the number of filters (or channels) of the convolutional layer in each block.
+
+        kernel_sizes: list of int.
+            The length of the list corresponds to the number of convolutional blocks, the items in the
+            list are the kernel sizes of the convolutional layer in each block.
+
+        num_classes: int.
+            Number of classes.
+        '''
+        
         super(LSTM_FCN, self).__init__()
         
         self.fcn = FCN(filters, kernel_sizes)
@@ -128,6 +140,7 @@ class LSTM_FCN(torch.nn.Module):
         self.softmax = torch.nn.Softmax(dim=-1)
     
     def forward(self, x):
+        
         '''
         Parameters:
         __________________________________
@@ -141,6 +154,7 @@ class LSTM_FCN(torch.nn.Module):
             Predicted probabilities, tensor with shape (samples, num_classes) where samples is the number
             of time series and num_classes is the number of classes.
         '''
+        
         x = torch.reshape(x, (x.shape[0], 1, x.shape[1]))
         y = torch.concat((self.fcn(x), self.lstm(x)), dim=-1)
         y = self.linear(y)
@@ -150,6 +164,7 @@ class LSTM_FCN(torch.nn.Module):
 
 
 class Lambda(torch.nn.Module):
+    
     def __init__(self, f):
         super(Lambda, self).__init__()
         self.f = f

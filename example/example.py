@@ -24,7 +24,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, stratif
 model = Model(
     x=x_train,
     y=y_train,
-    units=[5, 5],
+    units=[5],
     filters=[4, 4],
     kernel_sizes=[3, 3],
     dropout=0.2,
