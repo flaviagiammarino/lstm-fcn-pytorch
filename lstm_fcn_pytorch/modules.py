@@ -86,7 +86,11 @@ class FCN(torch.nn.Module):
                 kernel_size=(kernel_sizes[i],),
                 padding='same'
             )
-            modules[f'BatchNorm1d_{i}'] = torch.nn.BatchNorm1d(num_features=filters[i])
+            modules[f'BatchNorm1d_{i}'] = torch.nn.BatchNorm1d(
+                num_features=filters[i],
+                eps=0.001,
+                momentum=0.99
+            )
             modules[f'ReLU_{i}'] = torch.nn.ReLU()
         self.model = torch.nn.Sequential(modules)
         
