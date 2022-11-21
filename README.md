@@ -1,7 +1,7 @@
 # LSTM-FCN PyTorch
 
-![license](https://img.shields.io/github/license/flaviagiammarino/lstm-fcn-pytorch?color=green)
-![languages](https://img.shields.io/github/languages/top/flaviagiammarino/lstm-fcn-pytorch?color=blue)
+![license](https://img.shields.io/github/license/flaviagiammarino/lstm-fcn-pytorch?color=9b72e5)
+![languages](https://img.shields.io/github/languages/top/flaviagiammarino/lstm-fcn-pytorch?color=3672be)
 
 PyTorch implementation of univariate time series classification model introduced in Karim, F., Majumdar, S., Darabi, H. and Chen, S., 2017. 
 LSTM fully convolutional networks for time series classification. *IEEE access*, 6, pp.1662-1669. 
