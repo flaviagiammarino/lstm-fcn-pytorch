@@ -10,7 +10,7 @@ class Model():
         '''
         Implementation of time series classification model introduced in Karim, F., Majumdar, S., Darabi, H.
         and Chen, S., 2017. LSTM fully convolutional networks for time series classification. IEEE access,
-        6, pp.1662-1669. https://arxiv.org/abs/1709.05206.
+        6, pp.1662-1669.
 
         Parameters:
         __________________________________

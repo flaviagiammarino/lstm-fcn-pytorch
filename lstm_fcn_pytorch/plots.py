@@ -2,32 +2,33 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+
 def plot(x, y):
-    
     '''
     Plot the time series in each class.
-    
+
     Parameters:
     __________________________________
     x: np.array.
-        Time series, array with shape (samples, length) where samples is the number of time series
-        and length is the length of the time series.
-    
+        Time series, array with shape (samples, channels, length) where samples is the number of time series,
+        channels is the number of dimensions of each time series (1: univariate, >1: multivariate) and length
+        is the length of the time series.
+
     y: np.array.
         Predicted labels, array with shape (samples,) where samples is the number of time series.
-        
+
     Returns:
     __________________________________
     fig: go.Figure.
         Line chart of time series, one subplot for each class.
     '''
     
-    # extract the distinct classes
-    c = np.unique(y)
+    # extract the distinct clusters
+    c = np.unique(y).astype(int)
     
     fig = make_subplots(
         subplot_titles=['Class ' + str(i + 1) for i in c],
-        vertical_spacing=0.15,
+        vertical_spacing=0.125,
         rows=len(c),
         cols=1
     )
@@ -35,27 +36,32 @@ def plot(x, y):
     fig.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        margin=dict(t=40, b=10, l=10, r=10),
+        margin=dict(t=60, b=60, l=30, r=30),
         font=dict(
-            color='#000000',
-            size=10,
+            color='#1b1f24',
+            size=8,
         ),
         legend=dict(
             traceorder='normal',
             font=dict(
-                color='#000000',
+                color='#1b1f24',
+                size=10,
             ),
+            x=0,
+            y=-0.1,
+            orientation='h'
         ),
     )
     
     fig.update_annotations(
         font=dict(
-            size=13
+            color='#1b1f24',
+            size=12,
         )
     )
-    
+
     for i in range(len(c)):
-        
+    
         # extract the time series in the ith class
         x_ = x[y == c[i], :]
         
@@ -63,11 +69,12 @@ def plot(x, y):
             fig.add_trace(
                 go.Scatter(
                     y=x_[j, :],
+                    name='Actual',
                     showlegend=False,
                     mode='lines',
                     line=dict(
-                        color='rgba(194, 194, 194, 0.5)',
-                        width=0.1
+                        color='rgba(175,184,193,0.2)',
+                        width=0.5
                     )
                 ),
                 row=i + 1,
@@ -78,12 +85,13 @@ def plot(x, y):
             go.Scatter(
                 y=np.nanmean(x_, axis=0),
                 showlegend=True if i == 0 else False,
-                name='Average',
-                legendgroup='Average',
+                name='Class Average',
                 mode='lines',
                 line=dict(
-                    color='rgb(130, 80, 223)',
-                    width=1
+                    color='#cf222e',
+                    width=1,
+                    shape='spline',
+                    dash='dot',
                 )
             ),
             row=i + 1,
@@ -92,11 +100,12 @@ def plot(x, y):
         
         fig.update_xaxes(
             title='Time',
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             row=i + 1,
@@ -105,11 +114,12 @@ def plot(x, y):
         
         fig.update_yaxes(
             title='Value',
-            color='#000000',
+            color='#424a53',
             tickfont=dict(
-                color='#3a3a3a',
+                color='#6e7781',
+                size=6,
             ),
-            linecolor='#d9d9d9',
+            linecolor='#eaeef2',
             mirror=True,
             showgrid=False,
             zeroline=False,
