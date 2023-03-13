@@ -141,7 +141,6 @@ class LSTM_FCN(torch.nn.Module):
         self.fcn = FCN(filters, kernel_sizes)
         self.lstm = LSTM(input_length, units, dropout)
         self.linear = torch.nn.Linear(in_features=filters[-1] + units[-1], out_features=num_classes)
-        self.softmax = torch.nn.Softmax(dim=-1)
     
     def forward(self, x):
         
@@ -155,14 +154,13 @@ class LSTM_FCN(torch.nn.Module):
         Returns:
         __________________________________
         y: torch.Tensor.
-            Predicted probabilities, tensor with shape (samples, num_classes) where samples is the number
-            of time series and num_classes is the number of classes.
+            Logits, tensor with shape (samples, num_classes) where samples is the number of time series
+            and num_classes is the number of classes.
         '''
         
         x = torch.reshape(x, (x.shape[0], 1, x.shape[1]))
         y = torch.concat((self.fcn(x), self.lstm(x)), dim=-1)
         y = self.linear(y)
-        y = self.softmax(y)
         
         return y
 

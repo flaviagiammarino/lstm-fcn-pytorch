@@ -108,7 +108,7 @@ class Model():
                 loss = loss_fn(outputs, targets)
                 loss.backward()
                 optimizer.step()
-                accuracy = (torch.argmax(outputs, dim=-1) == targets).float().sum() / targets.shape[0]
+                accuracy = (torch.argmax(torch.nn.functional.softmax(outputs, dim=-1), dim=-1) == targets).float().sum() / targets.shape[0]
             if verbose:
                 print('epoch: {}, loss: {:,.6f}, accuracy: {:.6f}'.format(1 + epoch, loss, accuracy))
         self.model.train(False)
@@ -134,7 +134,7 @@ class Model():
         x = (x - self.x_min) / (self.x_max - self.x_min)
         
         # Get the predicted probabilities.
-        p = self.model(torch.from_numpy(x).to(self.device).float())
+        p = torch.nn.functional.softmax(self.model(torch.from_numpy(x).to(self.device).float()), dim=-1)
 
         # Get the predicted labels.
         y = np.argmax(p.detach().cpu().numpy(), axis=-1)
