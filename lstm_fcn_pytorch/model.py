@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from sklearn.utils import shuffle
+from sklearn.utils.class_weight import compute_class_weight
 
 from lstm_fcn_pytorch.modules import LSTM_FCN
 
@@ -47,6 +48,9 @@ class Model():
         self.x_min = np.nanmin(x, axis=0, keepdims=True)
         self.x_max = np.nanmax(x, axis=0, keepdims=True)
         x = (x - self.x_min) / (self.x_max - self.x_min)
+
+        # Calculate the class weights.
+        self.weight = compute_class_weight(class_weight="balanced", classes=np.sort(np.unique(y)), y=y)
         
         # Build the model.
         model = LSTM_FCN(
@@ -96,7 +100,7 @@ class Model():
         optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         
         # Define the loss function.
-        loss_fn = torch.nn.CrossEntropyLoss()
+        loss_fn = torch.nn.CrossEntropyLoss(weight=torch.from_numpy(self.weight).float().to(self.device))
         
         # Train the model.
         self.model.train(True)

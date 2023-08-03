@@ -36,8 +36,7 @@ class LSTM(torch.nn.Module):
                 batch_first=True
             )
             modules[f'Lambda_{i}'] = Lambda(f=lambda x: x[0])
-            if i < len(units) - 1:
-                modules[f'Dropout_{i}'] = torch.nn.Dropout(p=dropout)
+            modules[f'Dropout_{i}'] = torch.nn.Dropout(p=dropout)
         self.model = torch.nn.Sequential(modules)
     
     def forward(self, x):
